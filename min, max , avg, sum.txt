@@ -1,39 +1,53 @@
 #include <iostream>
 #include <vector>
-#include <algorithm>
+#include <omp.h>
+#include <climits>
+using namespace std;
+void min_reduction(vector<int>& arr) {
+  int min_value = INT_MAX;
+  #pragma omp parallel for reduction(min: min_value)
+  for (int i = 0; i < arr.size(); i++) {
+	if (arr[i] < min_value) {
+  	min_value = arr[i];
+	}
+  }
+  cout << "Minimum value: " << min_value << endl;
+}
 
-int main()
-{
-    std::vector<int> numbers;
-    int num;
-    char choice;
+void max_reduction(vector<int>& arr) {
+  int max_value = INT_MIN;
+  #pragma omp parallel for reduction(max: max_value)
+  for (int i = 0; i < arr.size(); i++) {
+	if (arr[i] > max_value) {
+  	max_value = arr[i];
+	}
+  }
+  cout << "Maximum value: " << max_value << endl;
+}
 
-    // Input loop
-    do
-    {
-        std::cout << "Enter a number: ";
-        std::cin >> num;
-        numbers.push_back(num);
+void sum_reduction(vector<int>& arr) {
+  int sum = 0;
+   #pragma omp parallel for reduction(+: sum)
+   for (int i = 0; i < arr.size(); i++) {
+	sum += arr[i];
+  }
+  cout << "Sum: " << sum << endl;
+}
 
-        std::cout << "Do you want to enter another number? (y/n): ";
-        std::cin >> choice;
-    } while (choice == 'y' || choice == 'Y');
+void average_reduction(vector<int>& arr) {
+  int sum = 0;
+  #pragma omp parallel for reduction(+: sum)
+  for (int i = 0; i < arr.size(); i++) {
+	sum += arr[i];
+  }
+  cout << "Average: " << (double)sum / arr.size() << endl;
+}
 
-    // Calculate min, max, sum, and average
-    int min = *std::min_element(numbers.begin(), numbers.end());
-    int max = *std::max_element(numbers.begin(), numbers.end());
-    int sum = 0;
-    for (int n : numbers)
-    {
-        sum += n;
-    }
-    double average = static_cast<double>(sum) / numbers.size();
+int main() {
+  vector<int> arr = {5, 2, 9, 1, 7, 6, 8, 3, 4};
 
-    // Output results
-    std::cout << "Minimum: " << min << std::endl;
-    std::cout << "Maximum: " << max << std::endl;
-    std::cout << "Sum: " << sum << std::endl;
-    std::cout << "Average: " << average << std::endl;
-
-    return 0;
+  min_reduction(arr);
+  max_reduction(arr);
+  sum_reduction(arr);
+  average_reduction(arr);
 }
