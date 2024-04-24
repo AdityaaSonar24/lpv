@@ -51,3 +51,45 @@ int main() {
   sum_reduction(arr);
   average_reduction(arr);
 }
+
+
+***************************************** Taking Input from user code ************************************************************
+#include <iostream>
+#include <vector>
+#include <algorithm>
+
+int main()
+{
+    std::vector<int> numbers;
+    int num;
+    char choice;
+
+    // Input loop
+    do
+    {
+        std::cout << "Enter a number: ";
+        std::cin >> num;
+        numbers.push_back(num);
+
+        std::cout << "Do you want to enter another number? (y/n): ";
+        std::cin >> choice;
+    } while (choice == 'y' || choice == 'Y');
+
+    // Calculate min, max, sum, and average
+    int min = *std::min_element(numbers.begin(), numbers.end());
+    int max = *std::max_element(numbers.begin(), numbers.end());
+    int sum = 0;
+    for (int n : numbers)
+    {
+        sum += n;
+    }
+    double average = static_cast<double>(sum) / numbers.size();
+
+    // Output results
+    std::cout << "Minimum: " << min << std::endl;
+    std::cout << "Maximum: " << max << std::endl;
+    std::cout << "Sum: " << sum << std::endl;
+    std::cout << "Average: " << average << std::endl;
+
+    return 0;
+}
